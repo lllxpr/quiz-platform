@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>深圳现场弹幕</title>
+<style>
+:root{--paper:#faf9f7;--ink:#26211d;--muted:#706a64;--orange:#ff5f08;--line:#e3dfd9;--card:rgba(255,255,255,.82)}
+*{box-sizing:border-box}html{background:var(--paper)}body{margin:0;min-height:100vh;color:var(--ink);font:14px system-ui,-apple-system,"Noto Sans SC",sans-serif;background-color:var(--paper);background-image:linear-gradient(rgba(255,95,8,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,95,8,.045) 1px,transparent 1px);background-size:21px 21px}.ascii-field{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:.54}.shell{position:relative;z-index:1;width:min(720px,100%);margin:auto;padding:18px 16px calc(32px + env(safe-area-inset-bottom))}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace}.brand{color:var(--orange)}.status{display:flex;align-items:center;gap:6px;color:var(--muted)}.status i{width:7px;height:7px;background:#9a948e}.status.online i{background:#2f9668;box-shadow:0 0 0 4px rgba(47,150,104,.12)}.hero{margin-bottom:24px}.eyebrow{color:var(--orange);font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace}.hero h1{margin:10px 0 8px;font-size:clamp(32px,10vw,54px);line-height:1;letter-spacing:-.055em}.hero p{margin:0;color:var(--muted);line-height:1.65}.panel{margin-bottom:14px;padding:16px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(12px)}.panel-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:13px}.panel-head h2{margin:0;font-size:16px;font-weight:650}.panel-head span{color:var(--muted);font:500 10px ui-monospace,SFMono-Regular,Menlo,monospace}.emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.reaction{min-height:52px;border:1px solid var(--line);border-radius:3px;background:rgba(250,249,247,.84);color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}.reaction:active{transform:translateY(1px) scale(.98)}.reaction:disabled{opacity:.42;cursor:wait}.emoji{font-size:26px}.phrases{display:grid;grid-template-columns:1fr 1fr;gap:8px}.phrase{min-height:52px;padding:10px 12px;text-align:left;font-size:14px;font-weight:550;line-height:1.35;border-left:3px solid var(--accent,var(--orange))}.phrase:nth-child(6n+2){--accent:#268bd2}.phrase:nth-child(6n+3){--accent:#5e9a67}.phrase:nth-child(6n+4){--accent:#8b5cf6}.phrase:nth-child(6n+5){--accent:#ec4899}.phrase:nth-child(6n){--accent:#d9a31a}.footer{padding:10px 2px;color:var(--muted);text-align:center;font:500 10px ui-monospace,SFMono-Regular,Menlo,monospace}.toast{position:fixed;z-index:5;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);min-width:180px;padding:11px 16px;background:#26211d;color:#fff;text-align:center;font-weight:600;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:520px){.emoji-grid{grid-template-columns:repeat(4,1fr)}.phrases{grid-template-columns:1fr}.shell{padding-top:14px}.topbar{margin-bottom:26px}}
+@media(prefers-reduced-motion:reduce){.reaction,.toast{transition:none}}
+</style>
+</head>
+<body>
+<canvas class="ascii-field" id="asciiField" aria-hidden="true"></canvas>
+<main class="shell">
+  <header class="topbar"><span class="brand">CLOUDFLARE · LIVE</span><span class="status" id="status"><i></i><b>正在连接</b></span></header>
+  <section class="hero"><span class="eyebrow">SHENZHEN IMMERSE 2026</span><h1>发一条现场弹幕</h1><p>完全匿名。选一个 Emoji 或一句话，它会立刻飞上大屏。</p></section>
+  <section class="panel">
+    <div class="panel-head"><h2>先来个反应</h2><span>Tap to send</span></div>
+    <div class="emoji-grid">
+      <button class="reaction emoji" data-kind="emoji" data-id="clap" aria-label="鼓掌">👏</button><button class="reaction emoji" data-kind="emoji" data-id="fire" aria-label="太棒了">🔥</button><button class="reaction emoji" data-kind="emoji" data-id="mindblown" aria-label="震惊">🤯</button><button class="reaction emoji" data-kind="emoji" data-id="rocket" aria-label="起飞">🚀</button><button class="reaction emoji" data-kind="emoji" data-id="idea" aria-label="好主意">💡</button><button class="reaction emoji" data-kind="emoji" data-id="hundred" aria-label="满分">💯</button><button class="reaction emoji" data-kind="emoji" data-id="laugh" aria-label="好笑">😂</button><button class="reaction emoji" data-kind="emoji" data-id="heart" aria-label="喜欢">❤️</button><button class="reaction emoji" data-kind="emoji" data-id="brick" aria-label="积木">🧱</button><button class="reaction emoji" data-kind="emoji" data-id="robot" aria-label="机器人">🤖</button><button class="reaction emoji" data-kind="emoji" data-id="lightning" aria-label="闪电">⚡</button><button class="reaction emoji" data-kind="emoji" data-id="globe" aria-label="全球">🌏</button>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>Builder 有话说</h2><span>Choose one</span></div>
+    <div class="phrases">
+      <button class="reaction phrase" data-kind="preset" data-id="builder-next">下一位 Builder 就是我</button><button class="reaction phrase" data-kind="preset" data-id="build-tomorrow">这个我回去就搭</button><button class="reaction phrase" data-kind="preset" data-id="scope-creep">能不能现场加个需求</button><button class="reaction phrase" data-kind="preset" data-id="pm-coding">产品经理已经开始写代码了</button><button class="reaction phrase" data-kind="preset" data-id="coffee-hot">从 Idea 到上线，咖啡还没凉</button><button class="reaction phrase" data-kind="preset" data-id="boss-screenshot">这页建议老板截图</button><button class="reaction phrase" data-kind="preset" data-id="describe-problem">不会写代码，但会描述问题</button><button class="reaction phrase" data-kind="preset" data-id="side-project">我的 Side Project 有救了</button>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>Cloudflare 速度</h2><span>Global instantly</span></div>
+    <div class="phrases">
+      <button class="reaction phrase" data-kind="preset" data-id="production">这不是 Demo，这是生产力</button><button class="reaction phrase" data-kind="preset" data-id="delivery-speed">全球部署，比我点外卖还快</button><button class="reaction phrase" data-kind="preset" data-id="lightning-speed">Ready at lightning speed</button><button class="reaction phrase" data-kind="preset" data-id="last-mile">最后一公里已经修成高速公路</button><button class="reaction phrase" data-kind="preset" data-id="serverless">没有服务器，但到处都有服务</button><button class="reaction phrase" data-kind="preset" data-id="global-now">代码刚写完，全球已经能访问</button><button class="reaction phrase" data-kind="preset" data-id="cities-ready">Global network: ready</button><button class="reaction phrase" data-kind="preset" data-id="just-build">Cloudflare：你只管 Build</button>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>Agentic 与技术梗</h2><span>For builders</span></div>
+    <div class="phrases">
+      <button class="reaction phrase" data-kind="preset" data-id="agent-pressure">Agent 已经开始卷我了</button><button class="reaction phrase" data-kind="preset" data-id="emotional-value">AI 在写代码，我在提供情绪价值</button><button class="reaction phrase" data-kind="preset" data-id="agent-accepts">Agent：这个需求我接了</button><button class="reaction phrase" data-kind="preset" data-id="collaborate-first">Human vs. AI，先合作再竞争</button><button class="reaction phrase" data-kind="preset" data-id="prompt-well">Prompt 写得好，发布下班早</button><button class="reaction phrase" data-kind="preset" data-id="magic-logs">像魔法，但有日志</button><button class="reaction phrase" data-kind="preset" data-id="do-state">Durable Objects：状态稳住了</button><button class="reaction phrase" data-kind="preset" data-id="wrangler-ritual">wrangler deploy 才是真正的仪式感</button>
+    </div>
+  </section>
+  <footer class="footer">匿名 · 不保存历史 · 发送内容仅限现场预设</footer>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+var ws=null,cooldown=false,reconnectTimer=null,toastTimer=null;
+function setStatus(online,text){var root=document.getElementById('status');root.className='status'+(online?' online':'');root.querySelector('b').textContent=text;}
+function connect(){clearTimeout(reconnectTimer);var proto=location.protocol==='https:'?'wss:':'ws:';ws=new WebSocket(proto+'//'+location.host+'/api/reaction/ws?role=audience');ws.onopen=function(){setStatus(true,'已连接大屏')};ws.onclose=function(){setStatus(false,'重新连接中');reconnectTimer=setTimeout(connect,1800)};ws.onerror=function(){setStatus(false,'连接异常')};ws.onmessage=function(event){var msg;try{msg=JSON.parse(event.data)}catch(e){return}if(msg.type==='sent'){showToast('已飞上大屏');if(navigator.vibrate)navigator.vibrate(35)}else if(msg.type==='rate_limited')showToast('慢一点，精彩要排队');else if(msg.type==='rejected')showToast('这条没有发送成功')};}
+function showToast(text){var toast=document.getElementById('toast');toast.textContent=text;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){toast.classList.remove('show')},1500)}
+function sendReaction(button){if(cooldown||!ws||ws.readyState!==1){showToast(ws&&ws.readyState===1?'稍等一下':'正在连接大屏');return}cooldown=true;document.querySelectorAll('.reaction').forEach(function(item){item.disabled=true});ws.send(JSON.stringify({type:'send',kind:button.dataset.kind,id:button.dataset.id}));setTimeout(function(){cooldown=false;document.querySelectorAll('.reaction').forEach(function(item){item.disabled=false})},1200)}
+document.querySelectorAll('.reaction').forEach(function(button){button.addEventListener('click',function(){sendReaction(button)})});
+function initAsciiField(){var canvas=document.getElementById('asciiField'),ctx=canvas.getContext('2d');if(!ctx)return;var chars='/><|_:.01{}[]+=*#'.split(''),points=[],frame=0,running=false,lastX=-100,lastY=-100,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;function resize(){var dpr=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(innerWidth*dpr);canvas.height=Math.round(innerHeight*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(!running)draw()}function move(event){var x=event.clientX,y=event.clientY;if((x-lastX)*(x-lastX)+(y-lastY)*(y-lastY)<=36)return;points.push({x:x,y:y,born:frame});if(points.length>60)points.shift();lastX=x;lastY=y;if(!running&&!reduced){running=true;requestAnimationFrame(draw)}}function draw(){ctx.clearRect(0,0,innerWidth,innerHeight);ctx.font='10px ui-monospace,monospace';ctx.textAlign='center';ctx.textBaseline='middle';for(var y=8,row=0;y<innerHeight;y+=14,row++)for(var x=6,col=0;x<innerWidth;x+=11,col++){var glow=0;for(var i=0;i<points.length;i++){var p=points[i],age=(frame-p.born)/80;if(age<0||age>1)continue;var distance=Math.hypot(x-p.x,y-p.y)/110;if(distance<1)glow=Math.max(glow,Math.pow(1-distance,1+age*5)*(1-age*age))}var alpha=Math.min(.8,.028+glow*.72),hash=Math.imul(row+1,0x45d9f3b)^Math.imul(col+1,0x119de1f3);hash^=hash>>>16;ctx.fillStyle='rgba(255,95,8,'+alpha+')';ctx.fillText(chars[(hash>>>0)%chars.length],x,y)}frame++;while(points.length&&frame-points[0].born>80)points.shift();if(points.length)requestAnimationFrame(draw);else running=false}addEventListener('pointermove',move,{passive:true});addEventListener('resize',resize);resize()}
+initAsciiField();connect();
+</script>
+</body>
+</html>
