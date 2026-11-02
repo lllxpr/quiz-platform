@@ -12,7 +12,6 @@ export default defineConfig({
       QUIZ_DB: bindings.d1({ name: "quiz-platform-db" }),
       QUIZ_ROOM: bindings.durableObject({ worker: "quiz-platform", exportName: "QuizRoom" }),
       REACTION_ROOM: bindings.durableObject({ worker: "quiz-platform", exportName: "ReactionRoom" }),
-      SETUP_TOKEN: bindings.secret(),
     },
     exports: {
       QuizRoom: exports.durableObject({ storage: "sqlite" }),

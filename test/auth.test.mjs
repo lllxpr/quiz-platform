@@ -9,14 +9,20 @@ function database() {
   const db={exec:async sql=>{sqlite.exec(sql);return {};},prepare(sql){return {args:[],bind(...args){this.args=args;return this;},async first(){return sqlite.prepare(sql).get(...this.args)||null;},async all(){return {results:sqlite.prepare(sql).all(...this.args)};},async run(){return sqlite.prepare(sql).run(...this.args);}};},async batch(statements){sqlite.exec('BEGIN');try{const result=[];for(const statement of statements)result.push(await statement.run());sqlite.exec('COMMIT');return result;}catch(e){sqlite.exec('ROLLBACK');throw e;}}};
   return {db,sqlite};
 }
-const setup={siteName:'Sample Quiz',language:'en',password:'local-test-password-only',setupKey:'synthetic-installation-key'};
+const setup={siteName:'Sample Quiz',language:'en',password:'local-test-password-only'};
 function post(path,data,headers={}){return new Request('https://quiz.example'+path,{method:'POST',headers:{'Content-Type':'application/json',...headers},body:JSON.stringify(data)});}
-async function fresh(){const {db,sqlite}=database();await initializeSchema(db,schema);return {env:{QUIZ_DB:db,SETUP_TOKEN:setup.setupKey},sqlite};}
+async function fresh(){const {db,sqlite}=database();await initializeSchema(db,schema);return {env:{QUIZ_DB:db},sqlite};}
 test('fresh installation has no quiz, question, history or configuration rows',async()=>{
  const {env,sqlite}=await fresh();for(const table of ['quizzes','quiz_questions','quiz_games','app_settings'])assert.equal(sqlite.prepare('SELECT count(*) AS n FROM '+table).get().n,0);assert.equal(await siteSettings(env.QUIZ_DB),null);
 });
-test('installation requires the owner key and refuses short passwords',async()=>{
- const {env}=await fresh();assert.equal((await accountRoute(post('/api/setup',{...setup,setupKey:'wrong'}),env)).status,403);assert.equal((await accountRoute(post('/api/setup',{...setup,password:'short'}),env)).status,400);
+test('installation needs no key, accepts Traditional Chinese, and refuses invalid settings',async()=>{
+ const {env}=await fresh();
+ assert.equal((await accountRoute(post('/api/setup',{...setup,password:'short'}),env)).status,400);
+ assert.equal((await accountRoute(post('/api/setup',{...setup,language:'unsupported'}),env)).status,400);
+ assert.equal((await accountRoute(post('/api/setup',{...setup,language:'zh-TW'}),env)).status,200);
+ assert.deepEqual(await siteSettings(env.QUIZ_DB),{siteName:setup.siteName,language:'zh-TW'});
+ const site=await (await accountRoute(new Request('https://quiz.example/api/site'),env)).json();
+ assert.equal(site.configured,true);assert.equal('setupKeyConfigured' in site,false);
 });
 test('setup is locked after completion and stores a salted hash, never the password',async()=>{
  const {env,sqlite}=await fresh();assert.equal((await accountRoute(post('/api/setup',setup),env)).status,200);assert.equal((await accountRoute(post('/api/setup',{...setup,password:'different-password'}),env)).status,409);const row=sqlite.prepare('SELECT * FROM app_settings').get();assert.notEqual(row.password_hash,setup.password);assert.equal(row.password_hash.length,64);assert(!JSON.stringify(row).includes(setup.password));const publicSite=await (await accountRoute(new Request('https://quiz.example/api/site'),env)).json();assert(!JSON.stringify(publicSite).includes('password_hash'));

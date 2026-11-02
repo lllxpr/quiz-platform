@@ -10,18 +10,16 @@ Requires Node.js 24+ and npm.
 
 ```sh
 npm ci
-npm run setup:local
 npm run dev
 ```
 
 Open the Local URL printed by the dev server. The first visit opens the setup wizard:
 
-1. Enter your site name and default language (English or Simplified Chinese).
-2. Copy the unique `SETUP_TOKEN` value from your local `.dev.vars` file into **Installation key**.
-3. Choose and confirm an admin password of at least 12 characters.
-4. Sign in at `/admin`, then use **Manage Quizzes** to create your first question library.
+1. Enter your site name and default language (English, 简体中文, or 繁體中文).
+2. Choose and confirm an admin password of at least 12 characters. No installation key is required.
+3. Sign in at `/admin`, then use **Manage Quizzes** to create your first question library.
 
-The schema is created automatically in the local D1 database. Setup saves site configuration only; it never inserts sample quizzes. `.dev.vars` and local database state are ignored by Git. Running `setup:local` again preserves your existing installation key.
+The schema is created automatically in the local D1 database. Setup saves site configuration only; it never inserts sample quizzes. Local database state is ignored by Git.
 
 The share link and QR code use the current site's address. Phones need to reach the deployed site; a localhost development URL is local to its computer.
 
@@ -31,13 +29,13 @@ The share link and QR code use the current site's address. Phones need to reach 
 
 This project uses the official `cf` CLI. It contains no account ID, custom domain, resource ID, or production binding copied from another installation.
 
-1. Run `npm ci` and `npm run setup:local`.
+1. Run `npm ci`.
 2. Choose unique Worker and database names in `cloudflare.config.ts`. Keep the two Durable Object bindings' `worker` names equal to the Worker name.
-3. Run `npx cf auth login`, then `npm run deploy`. The deploy script loads your private installation key from `.dev.vars` as the `SETUP_TOKEN` secret. `cf` provisions the declared D1/SQLite Durable Object resources when deploying to your account. Review the CLI's resource summary.
-4. Open the deployed URL and complete the same wizard with your own installation key. Each deployed database has its own first-run configuration.
+3. Run `npx cf auth login`, then `npm run deploy`. `cf` provisions the declared D1/SQLite Durable Object resources when deploying to your account. Review the CLI's resource summary.
+4. Open the deployed URL and complete the same wizard to create your admin password. Each deployed database has its own first-run configuration.
 5. Optionally add your custom domain in `cloudflare.config.ts` using `worker.domains`. No domain is hardcoded in the application.
 
-Keep `.dev.vars` private. There is no default admin password. The installation key only unlocks the one-time setup; it cannot sign in after setup. Completed setup cannot be overwritten by submitting the wizard again. An existing deployment's data is never cleared by this repository's schema.
+There is no default admin password. Complete the wizard immediately after first deployment; the first successful setup creates the administrator. Completed setup cannot be overwritten by submitting the wizard again. An existing deployment's data is never cleared by this repository's schema.
 
 Deployment reference: [Cloudflare CLI projects](https://developers.cloudflare.com/cf/projects/), [programmatic configuration](https://developers.cloudflare.com/cf/projects/cloudflare-config/).
 
@@ -68,7 +66,7 @@ npm run typecheck
 npm run build
 ```
 
-Tests cover empty installation, installation-key validation, setup races/locking, password storage, session creation/expiry/revocation, throttling and request origins. The local Workers/D1 integration was also checked for empty quizzes/history and question-management permissions.
+Tests cover empty installation, key-free setup and Traditional Chinese settings, setup races/locking, password storage, session creation/expiry/revocation, throttling and request origins. The local Workers/D1 integration was also checked for empty quizzes/history and question-management permissions.
 
 - `src/index.ts`: Worker routes and application pages
 - `src/auth.mjs`: installation, passwords and sessions

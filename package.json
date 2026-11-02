@@ -5,10 +5,9 @@
   "scripts": {
     "dev": "cf dev",
     "build": "cf build",
-    "deploy": "cf deploy --secrets-file .dev.vars",
+    "deploy": "cf deploy",
     "typecheck": "cf workers types && tsc",
-    "test": "node --test test/*.test.mjs",
-    "setup:local": "node scripts/setup-local.mjs"
+    "test": "node --test test/*.test.mjs"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "beta",

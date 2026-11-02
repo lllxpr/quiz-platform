@@ -40,7 +40,7 @@ async function limited(request, db) {
 }
 export async function accountRoute(request, env) {
   const path = new URL(request.url).pathname;
-  if (path === '/api/site' && request.method === 'GET') return json({ configured: Boolean(await siteSettings(env.QUIZ_DB)), settings: await siteSettings(env.QUIZ_DB), setupKeyConfigured: typeof env.SETUP_TOKEN === 'string' && env.SETUP_TOKEN.length >= 24 });
+  if (path === '/api/site' && request.method === 'GET') return json({ configured: Boolean(await siteSettings(env.QUIZ_DB)), settings: await siteSettings(env.QUIZ_DB) });
   if (!['/api/setup', '/api/auth/login', '/api/auth/logout'].includes(path)) return null;
   if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
   const origin = request.headers.get('Origin');
@@ -53,7 +53,6 @@ export async function accountRoute(request, env) {
   }
   const settings = await siteSettings(db);
   if (path === '/api/setup' && settings) return json({ error: 'Setup is already complete' }, 409);
-  if (path === '/api/setup' && (typeof env.SETUP_TOKEN !== 'string' || env.SETUP_TOKEN.length < 24)) return json({ error: 'Set a unique SETUP_TOKEN deployment secret of at least 24 characters before setup' }, 503);
   const limit = await limited(request, db);
   if (limit.blocked) return json({ error: 'Too many attempts. Try again in 15 minutes.' }, 429);
   let data;
@@ -61,8 +60,7 @@ export async function accountRoute(request, env) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return json({ error: 'Invalid request' }, 400);
   if (typeof data.password !== 'string' || data.password.length > 128) return json({ error: 'Invalid password' }, 400);
   if (path === '/api/setup') {
-    if (!await equalSecret(String(data.setupKey || ''), env.SETUP_TOKEN)) return json({ error: 'Invalid setup key' }, 403);
-    if (data.password.length < 12 || typeof data.siteName !== 'string' || !data.siteName.trim() || data.siteName.length > 80 || !['en', 'zh-CN'].includes(data.language)) return json({ error: 'Enter a site name (1–80 characters), a language, and a password of 12–128 characters' }, 400);
+    if (data.password.length < 12 || typeof data.siteName !== 'string' || !data.siteName.trim() || data.siteName.length > 80 || !['en', 'zh-CN', 'zh-TW'].includes(data.language)) return json({ error: 'Enter a site name (1–80 characters), a language, and a password of 12–128 characters' }, 400);
     const salt = random(), hash = await passwordHash(data.password, salt);
     try {
       await db.prepare('INSERT INTO app_settings(id,site_name,language,password_salt,password_hash,created_at) VALUES(1,?,?,?,?,?)').bind(data.siteName.trim(), data.language, salt, hash, now()).run();

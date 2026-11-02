@@ -17,7 +17,6 @@ interface Env {
   QUIZ_DB: D1Database;
   QUIZ_ROOM: DurableObjectNamespace;
   REACTION_ROOM: DurableObjectNamespace;
-  SETUP_TOKEN: string;
   ASSETS: Fetcher;
 }
 

@@ -175,7 +175,7 @@
     <div class="lobby-right">
       <div style="text-align:center;margin-bottom:.75rem;">
         <span class="player-count" id="playerCount">0</span>
-        <span class="player-label"> players joined</span>
+        <span class="player-label" data-i18n="playersJoined"> players joined</span>
       </div>
       <div class="control-panel">
         <div class="panel-label">Select Quiz</div>
@@ -295,6 +295,7 @@ var T = {
   congratulations: 'Congratulations!', leaderboard: 'Leaderboard',
   saveResults: 'Save Results', saving: 'Saving...', saved: 'Saved!', saveFailed: 'Save failed',
   restart: 'Restart', resetGame: 'Reset Game',
+  adminTitle:'Quiz Platform Admin',loginPassword:'Enter admin password',login:'Login',invalidPassword:'Invalid password',loginFailed:'Login failed',loginLimited:'Too many attempts. Try again in 15 minutes.',
 };
 
 function showLoginForm() {
@@ -308,6 +309,10 @@ function showLoginForm() {
     '<br><button id="loginBtn" style="width:100%;margin-top:.75rem;padding:.7rem 2rem;border:1px solid #f48120;border-radius:3px;background:#f48120;color:#20160e;font-weight:750;cursor:pointer;">Login</button>' +
     '<p id="loginError" style="color:#b42318;margin-top:1rem;font-size:13px;display:none;">Invalid password</p>' +
     '</div>';
+  overlay.querySelector('h2').textContent=T.adminTitle;
+  overlay.querySelector('#tokenInput').placeholder=T.loginPassword;
+  overlay.querySelector('#loginBtn').textContent=T.login;
+  overlay.querySelector('#loginError').textContent=T.invalidPassword;
   document.body.appendChild(overlay);
   setTimeout(function(){
     var inp = document.getElementById('tokenInput');
@@ -322,7 +327,7 @@ async function doLogin() {
   try {
     var response=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:input.value})});
     var data=await response.json();
-    if(!response.ok)throw Error(data.error||'Login failed');
+    if(!response.ok)throw Error(response.status===401?T.invalidPassword:response.status===429?T.loginLimited:T.loginFailed);
     sessionStorage.setItem('quiz_admin_token',data.token);location.reload();
   }catch(e){error.textContent=e.message;error.style.display='block';}
 }
